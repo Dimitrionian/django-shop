@@ -7,16 +7,16 @@ import filer.fields.file
 
 class Migration(migrations.Migration):
 
+    AUTH_APP_LABEL = ".".join([
+        "{}".format(v).lower() for v in settings.AUTH_USER_MODEL.split('.')[:-1]])
+
     dependencies = [
         ('filer', '0002_auto_20150606_2003'),
         ('post_office', '0002_add_i18n_and_backend_alias'),
+        (AUTH_APP_LABEL, '0001_initial'),
     ]
-    if 'email_auth' in settings.INSTALLED_APPS:
-        dependencies.append(('email_auth', '0001_initial'))
-        customer_bases = ('email_auth.user',)
-    else:
-        dependencies.append(('auth', '0001_initial'))
-        customer_bases = ('auth.user',)
+
+    customer_bases = (settings.AUTH_USER_MODEL.lower(),)
 
     operations = [
         migrations.CreateModel(
